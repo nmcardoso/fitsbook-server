@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 
 const app = express()
 app.use(bodyParser.json())
+app.use(express.static('public'))
 
 const verifySignature = (req, res, next) => {
   const payload = JSON.stringify(req.body)
@@ -28,7 +29,7 @@ app.post('/git', verifySignature, (req, res) => {
       cmd.run('refresh')
       return res.status(200).send(data)
     })
-  } else if(req.headers['x-github-event'] == 'ping') {
+  } else if (req.headers['x-github-event'] == 'ping') {
     return res.status(200).send('PONG')
   } else {
     return res.status(200).send('Unsuported Github event. Nothing done.')
