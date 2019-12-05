@@ -2,6 +2,7 @@ const express = require('express')
 const cmd = require('node-cmd')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
+const fs = require('fs')
 
 const app = express()
 app.use(bodyParser.json())
@@ -38,6 +39,11 @@ app.post('/git', verifySignature, (req, res) => {
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
+})
+
+app.post('/test', (req, res) => {
+  fs.appendFileSync('.data/test.txt', JSON.stringify(req.body) + '\n------\n')
+  res.status(200).send('OK')
 })
 
 app.listen(process.env.PORT, () => {
