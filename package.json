@@ -4,13 +4,17 @@
   "description": "Glitch Github Sync",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "author": "Natanael",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "node-cmd": "^3.0.0"
+    "leveldown": "^5.4.1",
+    "levelup": "^4.3.2",
+    "node-cmd": "^3.0.0",
+    "uniqid": "^5.2.0"
   }
 }
