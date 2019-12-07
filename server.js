@@ -105,4 +105,21 @@ app.get('/api/models', async (req, res) => {
     console.log(e)
   }
 })
+
+app.post('/api/history/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+
+    model = await db.get(id)
+    model = JSON.parse(model.toString())
+  
+    model.history.push(req.body)
+  
+    await db.put(id, JSON.stringify(model))
+    return res.status(200).send('OK')
+  } catch(e) {
+    console.log(e)
+    return res.json({error: e})
+  }
+})
 })
