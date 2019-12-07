@@ -3,10 +3,15 @@ const cmd = require('node-cmd')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const fs = require('fs')
+const levelup = require('levelup')
+const leveldown = require('leveldown')
+const uniqid = require('uniqid')
 
 const app = express()
 app.use(bodyParser.json())
 app.use(express.static('public'))
+
+const db = levelup(leveldown('./.data/model_db'))
 
 const verifySignature = (req, res, next) => {
   const payload = JSON.stringify(req.body)
