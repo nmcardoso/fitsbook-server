@@ -73,4 +73,14 @@ app.post('/api/model', async (req, res) => {
     return res.json({error: e})
   }
 })
+
+app.get('/api/model/:id', async (req, res) => {
+  try {
+    model = await db.get(req.params.id)
+    return res.json(JSON.parse(model.toString()))
+  } catch(e) {
+    console.log(e)
+    return res.json({error: e})
+  }
+})
 })
