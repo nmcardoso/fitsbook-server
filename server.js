@@ -134,4 +134,7 @@ app.get('/api/history/:id', async (req, res) => {
     return res.json({error: e})
   }
 })
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Your app is listening on port ${process.env.PORT || 3000}`)
 })
