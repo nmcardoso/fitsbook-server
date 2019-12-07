@@ -122,4 +122,16 @@ app.post('/api/history/:id', async (req, res) => {
     return res.json({error: e})
   }
 })
+
+app.get('/api/history/:id', async (req, res) => {
+  try {
+    model = await db.get(req.params.id)
+    model = JSON.parse(model.toString())
+    
+    return res.json(model.history)
+  } catch(e) {
+    console.log(e)
+    return res.json({error: e})
+  }
+})
 })
