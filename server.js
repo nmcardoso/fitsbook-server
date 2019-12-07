@@ -51,6 +51,26 @@ app.post('/test', (req, res) => {
   res.status(200).send('OK')
 })
 
-app.listen(process.env.PORT, () => {
-  console.log(`Your app is listening on port ${process.env.PORT}`)
+app.post('/api/model', async (req, res) => {
+  const id = uniqid()
+  obj = {
+    model: {
+      name: req.body.model.name,
+      config: req.body.model.config
+    },
+    optimizer: {
+      name: req.body.optimizer.name,
+      config: req.body.optimizer.config
+    },
+    history: []
+  }
+
+  try {
+    await db.put(id, JSON.stringify(obj))
+    return res.json({id})
+  } catch(e) {
+    console.log(e)
+    return res.json({error: e})
+  }
+})
 })
