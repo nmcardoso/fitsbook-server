@@ -136,7 +136,7 @@ app.get('/api/history/:id', async (req, res) => {
 })
 
 app.get('/api/ping', (req, res) => {
-  return res.status(200).send(`PONG [${Date.now()}]`)
+  return res.status(200).send(`PONG [${new Date().toUTCString()}]`)
 })
 
 app.listen(process.env.PORT || 3000, () => {
