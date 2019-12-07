@@ -83,4 +83,26 @@ app.get('/api/model/:id', async (req, res) => {
     return res.json({error: e})
   }
 })
+
+app.get('/api/models', async (req, res) => {
+  try {
+    keys = []
+    db.createKeyStream()
+      .on('data', data => {
+        keys.push(data.toString())
+      })
+      .on('error', e => {
+        console.log(e)
+      })
+      .on('close', () => {
+        console.log('Stream Closed')
+      })
+      .on('end', () => {
+        console.log('Sream Ended')
+        res.json(keys)
+      })
+  } catch(e) {
+    console.log(e)
+  }
+})
 })
