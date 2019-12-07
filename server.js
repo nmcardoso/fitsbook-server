@@ -135,6 +135,10 @@ app.get('/api/history/:id', async (req, res) => {
   }
 })
 
+app.get('/api/ping', (req, res) => {
+  return res.status(200).send(`PONG [${Date.now()}]`)
+})
+
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Your app is listening on port ${process.env.PORT || 3000}`)
 })
