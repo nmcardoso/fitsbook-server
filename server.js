@@ -45,7 +45,7 @@ app.post('/git', verifySignature, (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html')
+  res.render('pages/index')
 })
 
 app.post('/test', (req, res) => {
