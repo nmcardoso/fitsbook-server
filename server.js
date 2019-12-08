@@ -8,6 +8,8 @@ const leveldown = require('leveldown')
 const uniqid = require('uniqid')
 
 const app = express()
+app.set('view engine', 'ejs')
+
 app.use(bodyParser.json())
 app.use(express.static('public'))
 
