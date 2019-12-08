@@ -47,7 +47,8 @@
   let datasets = []
 
   function getHistory() {
-    return fetch(`http://localhost:3000/api/history/${id}`).then(resp => {
+    const API_ROOT = `${window.location.origin}/api`
+    return fetch(`${API_ROOT}/history/${id}`).then(resp => {
       return resp.json()
     })
   }
