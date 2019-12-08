@@ -48,6 +48,10 @@ app.get('/', (req, res) => {
   res.render('pages/index')
 })
 
+app.get('/chart/:id', (req, res) => {
+  res.render('pages/chart', { id: req.params.id })
+})
+
 app.post('/test', (req, res) => {
   fs.appendFileSync('.data/test.txt', JSON.stringify(req.body) + '\n------\n')
   res.status(200).send('OK')
