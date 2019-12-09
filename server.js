@@ -164,6 +164,24 @@ app.post('/api/training/:id/stop', async (req, res) => {
   }
 })
 
+app.get('/api/training/:id/stop', async (req, res) => {
+  try {
+    const id = req.params.id
+
+    model = await db.get(id)
+    model = JSON.parse(model.toString())
+
+    if ('stop_signal' in model && model.stop_signal === true) {
+      return res.json({ stop: true })
+    } else {
+      return res.json({ stop: false })
+    }
+  } catch(e) {
+    console.log(e)
+    return res.send({ error: JSON.stringify(e) })
+  }
+})
+
 app.post('/api/history/:id', async (req, res) => {
   try {
     const id = req.params.id
