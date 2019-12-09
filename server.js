@@ -83,6 +83,8 @@ app.post('/api/model', async (req, res) => {
       name: req.body.optimizer.name,
       config: req.body.optimizer.config
     },
+    training_start: Date.now(),
+    training_end: null,
     history: []
   }
 
