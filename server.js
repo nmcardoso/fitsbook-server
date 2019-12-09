@@ -52,6 +52,21 @@ app.get('/chart/:id', (req, res) => {
   res.render('pages/chart', { id: req.params.id })
 })
 
+app.get('/models', (req, res) => {
+  const models = {}
+
+  db.createReadStream()
+    .on('data', data => {
+      models[data.key.toString()] = JSON.parse(data.value.toString())
+    })
+    .on('error', e => {
+      console.log('GET /model db.createReadStream Error', e)
+    })
+    .on('end', () => {
+      res.render('pages/models', { models })
+    })
+})
+
 app.post('/test', (req, res) => {
   fs.appendFileSync('.data/test.txt', JSON.stringify(req.body) + '\n------\n')
   res.status(200).send('OK')

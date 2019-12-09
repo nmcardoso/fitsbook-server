@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../partials/head') %>
+
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container mt-4">
+    <h2>Trained Models</h2>
+
+    <% Object.keys(models).forEach(id => { %>
+      <br><br>
+      <%= JSON.stringify(models[id]) %>
+    <% }) %>
+  </div>
+
+  <%- include('../partials/scripts') %>
+</body>
+</html>
