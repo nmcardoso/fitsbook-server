@@ -129,6 +129,23 @@ app.get('/api/models', async (req, res) => {
   }
 })
 
+app.post('/api/training/:id/end', async (req, res) => {
+  try {
+    const id = req.params.id
+
+    model = await db.get(id)
+    model = JSON.parse(model.toString())
+
+    model.training_end = Date.now()
+
+    await db.put(id, JSON.stringify(model))
+    return res.status(200).send('OK')
+  } catch(e) {
+    console.log(e)
+    return res.json({error: JSON.stringify(e) })
+  }
+})
+
 app.post('/api/history/:id', async (req, res) => {
   try {
     const id = req.params.id
