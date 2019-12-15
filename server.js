@@ -111,7 +111,7 @@ app.get('/api/model/:id', async (req, res) => {
 
 app.get('/api/models', async (req, res) => {
   try {
-    const models = []
+    let models = {}
     db.createReadStream()
       .on('data', data => {
         models[data.key.toString()] = JSON.parse(data.value.toString())
