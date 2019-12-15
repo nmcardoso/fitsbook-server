@@ -111,6 +111,23 @@ app.get('/api/model/:id', async (req, res) => {
 
 app.get('/api/models', async (req, res) => {
   try {
+    db.createReadStream()
+      .on('data', data => {
+        models[data.key.toString()] = JSON.parse(data.value.toString())
+      })
+      .on('error', e => {
+        console.log('GET /model db.createReadStream Error', e)
+      })
+      .on('end', () => {
+        res.json(models)
+      })
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+app.get('/api/models/id', async (req, res) => {
+  try {
     keys = []
     db.createKeyStream()
       .on('data', data => {
