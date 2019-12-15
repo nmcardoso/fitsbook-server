@@ -92,10 +92,10 @@ app.post('/api/model', async (req, res) => {
 
   try {
     await db.put(id, JSON.stringify(obj))
-    return res.json({id})
-  } catch(e) {
+    return res.json({ id })
+  } catch (e) {
     console.log(e)
-    return res.json({error: e})
+    return res.json({ error: e })
   }
 })
 
@@ -103,9 +103,9 @@ app.get('/api/model/:id', async (req, res) => {
   try {
     model = await db.get(req.params.id)
     return res.json(JSON.parse(model.toString()))
-  } catch(e) {
+  } catch (e) {
     console.log(e)
-    return res.json({error: e})
+    return res.json({ error: e })
   }
 })
 
@@ -126,7 +126,7 @@ app.get('/api/models', async (req, res) => {
         console.log('Sream Ended')
         res.json(keys)
       })
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
 })
@@ -142,9 +142,9 @@ app.post('/api/training/:id/end', async (req, res) => {
 
     await db.put(id, JSON.stringify(model))
     return res.status(200).send('OK')
-  } catch(e) {
+  } catch (e) {
     console.log(e)
-    return res.json({error: JSON.stringify(e) })
+    return res.json({ error: JSON.stringify(e) })
   }
 })
 
@@ -160,7 +160,7 @@ app.post('/api/training/:id/stop', async (req, res) => {
 
     await db.put(id, JSON.stringify(model))
     return res.status(200).send('OK')
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     return res.json({ error: JSON.stringify(e) })
   }
@@ -178,7 +178,7 @@ app.get('/api/training/:id/stop', async (req, res) => {
     } else {
       return res.json({ stop: false })
     }
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     return res.send({ error: JSON.stringify(e) })
   }
@@ -190,14 +190,14 @@ app.post('/api/history/:id', async (req, res) => {
 
     model = await db.get(id)
     model = JSON.parse(model.toString())
-  
+
     model.history.push(req.body)
-  
+
     await db.put(id, JSON.stringify(model))
     return res.status(200).send('OK')
-  } catch(e) {
+  } catch (e) {
     console.log(e)
-    return res.json({error: e})
+    return res.json({ error: e })
   }
 })
 
@@ -205,11 +205,11 @@ app.get('/api/history/:id', async (req, res) => {
   try {
     model = await db.get(req.params.id)
     model = JSON.parse(model.toString())
-    
+
     return res.json(model.history)
-  } catch(e) {
+  } catch (e) {
     console.log(e)
-    return res.json({error: e})
+    return res.json({ error: e })
   }
 })
 
