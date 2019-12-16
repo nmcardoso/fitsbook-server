@@ -9,6 +9,18 @@ const uniqid = require('uniqid')
 const cors = require('cors')
 
 const app = express()
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
+
+io.set('origins', '*:*')
+
+io.on('connection', socket => {
+  socket.emit('news', { hello: 'world' })
+  socket.on('client-event', data => {
+    console.log(data)
+  })
+})
+
 app.set('view engine', 'ejs')
 
 app.use(bodyParser.json())
@@ -212,6 +224,7 @@ app.post('/api/history/:id', async (req, res) => {
     model.history.push(req.body)
 
     await db.put(id, JSON.stringify(model))
+    io.emit(`history-${id}`, req.body)
     return res.status(200).send('OK')
   } catch (e) {
     console.log(e)
@@ -235,6 +248,6 @@ app.get('/api/ping', (req, res) => {
   return res.status(200).send(`PONG [${new Date().toUTCString()}]`)
 })
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Your app is listening on port ${process.env.PORT || 3000}`)
+server.listen(process.env.PORT || 8000, () => {
+  console.log(`Your app is listening on port ${process.env.PORT || 8000}`)
 })
