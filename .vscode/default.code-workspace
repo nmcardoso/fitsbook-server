@@ -1,11 +1,14 @@
 {
 	"folders": [
 		{
+			"path": "/home/natan/repos/fitsbook"
+		},
+		{
 			"path": "/home/natan/repos/fitsbook-server"
 		},
 		{
-			"path": "/home/natan/repos/fitsbook"
+			"path": "/home/natan/repos/fitsbook-python"
 		}
 	],
-  "settings": {}
+	"settings": {}
 }
