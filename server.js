@@ -63,7 +63,7 @@ app.post('/test', (req, res) => {
   res.status(200).send('OK')
 })
 
-app.post('/api/model', async (req, res) => {
+app.post('/api/model', (req, res) => {
   const obj = {
     model: {
       name: req.body.model.name,
@@ -82,17 +82,17 @@ app.post('/api/model', async (req, res) => {
   res.json({ id })
 })
 
-app.get('/api/model/:id', async (req, res) => {
+app.get('/api/model/:id', (req, res) => {
   const model = db.getModelById(req.params.id)
   res.json(model)
 })
 
-app.get('/api/models', async (req, res) => {
+app.get('/api/models', (req, res) => {
   const models = db.getModels()
   res.json(models)
 })
 
-app.post('/api/training/:id/end', async (req, res) => {
+app.post('/api/training/:id/end', (req, res) => {
   const patch = {
     training_end: Date.now()
   }
@@ -100,7 +100,7 @@ app.post('/api/training/:id/end', async (req, res) => {
   res.status(200).send('OK')
 })
 
-app.post('/api/training/:id/stop', async (req, res) => {
+app.post('/api/training/:id/stop', (req, res) => {
   const patch = {
     stop_signal: true,
     training_end: Date.now()
@@ -109,18 +109,18 @@ app.post('/api/training/:id/stop', async (req, res) => {
   res.status(200).send('OK')
 })
 
-app.get('/api/training/:id/stop', async (req, res) => {
+app.get('/api/training/:id/stop', (req, res) => {
   const stopSignal = db.getModelAttr(req.params.id, '$.stop_signal')
   res.json({ stop: Boolean(stopSignal) })
 })
 
-app.post('/api/history/:id', async (req, res) => {
+app.post('/api/history/:id', (req, res) => {
   db.appendHistory(req.params.id, req.body)
   io.emit(`history-${req.params.id}`, req.body)
   res.status(200).send('OK')
 })
 
-app.get('/api/history/:id', async (req, res) => {
+app.get('/api/history/:id', (req, res) => {
   const history = db.getHistoryById(req.params.id)
   res.json(history)
 })
