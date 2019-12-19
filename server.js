@@ -19,8 +19,6 @@ io.on('connection', socket => {
   })
 })
 
-app.set('view engine', 'ejs')
-
 app.use(bodyParser.json())
 app.use(express.static('public'))
 app.use(cors())
@@ -57,7 +55,7 @@ app.post('/git', verifySignature, (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  res.render('pages/index')
+  res.sendFile(__dirname + '/views/index.html')
 })
 
 app.post('/test', (req, res) => {
