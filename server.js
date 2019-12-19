@@ -3,10 +3,8 @@ const cmd = require('node-cmd')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
 const fs = require('fs')
-const levelup = require('levelup')
-const leveldown = require('leveldown')
-const uniqid = require('uniqid')
 const cors = require('cors')
+const Database = require('./db')
 
 const app = express()
 const server = require('http').Server(app)
@@ -27,7 +25,7 @@ app.use(bodyParser.json())
 app.use(express.static('public'))
 app.use(cors())
 
-const db = levelup(leveldown('./.data/model_db'))
+const db = new Database()
 
 const verifySignature = (req, res, next) => {
   const payload = JSON.stringify(req.body)
@@ -87,8 +85,7 @@ app.post('/test', (req, res) => {
 })
 
 app.post('/api/model', async (req, res) => {
-  const id = uniqid()
-  obj = {
+  const obj = {
     model: {
       name: req.body.model.name,
       config: req.body.model.config
@@ -102,146 +99,51 @@ app.post('/api/model', async (req, res) => {
     history: []
   }
 
-  try {
-    await db.put(id, JSON.stringify(obj))
-    return res.json({ id })
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: e })
-  }
+  const id = db.insertModel(obj)
+  res.json({ id })
 })
 
 app.get('/api/model/:id', async (req, res) => {
-  try {
-    model = await db.get(req.params.id)
-    return res.json(JSON.parse(model.toString()))
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: e })
-  }
+  const model = db.getModelById(req.params.id)
+  res.json(model)
 })
 
 app.get('/api/models', async (req, res) => {
-  try {
-    let models = {}
-    db.createReadStream()
-      .on('data', data => {
-        models[data.key.toString()] = JSON.parse(data.value.toString())
-      })
-      .on('error', e => {
-        console.log('GET /model db.createReadStream Error', e)
-      })
-      .on('end', () => {
-        res.json(models)
-      })
-  } catch (e) {
-    console.log(e)
-  }
-})
-
-app.get('/api/models/id', async (req, res) => {
-  try {
-    keys = []
-    db.createKeyStream()
-      .on('data', data => {
-        keys.push(data.toString())
-      })
-      .on('error', e => {
-        console.log(e)
-      })
-      .on('close', () => {
-        console.log('Stream Closed')
-      })
-      .on('end', () => {
-        console.log('Sream Ended')
-        res.json(keys)
-      })
-  } catch (e) {
-    console.log(e)
-  }
+  const models = db.getModels()
+  res.json(models)
 })
 
 app.post('/api/training/:id/end', async (req, res) => {
-  try {
-    const id = req.params.id
-
-    model = await db.get(id)
-    model = JSON.parse(model.toString())
-
-    model.training_end = Date.now()
-
-    await db.put(id, JSON.stringify(model))
-    return res.status(200).send('OK')
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: JSON.stringify(e) })
+  const patch = {
+    training_end: Date.now()
   }
+  db.patchModel(req.params.id, patch)
+  res.status(200).send('OK')
 })
 
 app.post('/api/training/:id/stop', async (req, res) => {
-  try {
-    const id = req.params.id
-
-    model = await db.get(id)
-    model = JSON.stringify(model.toString())
-
-    model.stop_signal = true
-    model.training_end = Date.now()
-
-    await db.put(id, JSON.stringify(model))
-    return res.status(200).send('OK')
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: JSON.stringify(e) })
+  const patch = {
+    stop_signal: true,
+    training_end: Date.now()
   }
+  db.patchModel(req.params.id, patch)
+  res.status(200).send('OK')
 })
 
 app.get('/api/training/:id/stop', async (req, res) => {
-  try {
-    const id = req.params.id
-
-    model = await db.get(id)
-    model = JSON.parse(model.toString())
-
-    if ('stop_signal' in model && model.stop_signal === true) {
-      return res.json({ stop: true })
-    } else {
-      return res.json({ stop: false })
-    }
-  } catch (e) {
-    console.log(e)
-    return res.send({ error: JSON.stringify(e) })
-  }
+  const stopSignal = db.getModelAttr(req.params.id, '$.stop_signal')
+  res.json({ stop: Boolean(stopSignal) })
 })
 
 app.post('/api/history/:id', async (req, res) => {
-  try {
-    const id = req.params.id
-
-    model = await db.get(id)
-    model = JSON.parse(model.toString())
-
-    model.history.push(req.body)
-
-    await db.put(id, JSON.stringify(model))
-    io.emit(`history-${id}`, req.body)
-    return res.status(200).send('OK')
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: e })
-  }
+  db.appendHistory(req.params.id, req.body)
+  io.emit(`history-${req.params.id}`, req.body)
+  res.status(200).send('OK')
 })
 
 app.get('/api/history/:id', async (req, res) => {
-  try {
-    model = await db.get(req.params.id)
-    model = JSON.parse(model.toString())
-
-    return res.json(model.history)
-  } catch (e) {
-    console.log(e)
-    return res.json({ error: e })
-  }
+  const history = db.getHistoryById(req.params.id)
+  res.json(history)
 })
 
 app.get('/api/ping', (req, res) => {
