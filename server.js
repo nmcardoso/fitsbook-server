@@ -97,6 +97,7 @@ app.post('/api/training/:id/end', (req, res) => {
     training_end: Date.now()
   }
   db.patchModel(req.params.id, patch)
+  io.emit(`training-${req.params.id}`, 'end')
   res.status(200).send('OK')
 })
 
