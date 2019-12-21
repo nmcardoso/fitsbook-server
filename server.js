@@ -87,6 +87,11 @@ app.get('/api/model/:id', (req, res) => {
   res.json(model)
 })
 
+app.delete('/api/model/:id', (req, res) => {
+  db.deleteModelById(req.params.id)
+  res.send('OK')
+})
+
 app.get('/api/models', (req, res) => {
   const models = db.getModels()
   res.json(models)

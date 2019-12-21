@@ -56,6 +56,14 @@ class Database {
     return JSON.parse(attr)
   }
 
+  deleteModelById(id) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare('DELETE FROM models WHERE oid = ?')
+    const info = stmt.run(id)
+    console.log('DELETE MODEL', info)
+  }
+
   getHistoryById(id) {
     const db = this.dbInstance
 
