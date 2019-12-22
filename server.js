@@ -92,6 +92,15 @@ app.delete('/api/model/:id', (req, res) => {
   res.send('OK')
 })
 
+app.post('/api/model/:id/description', (req, res) => {
+  if (!'description' in req.body) {
+    return res.status(200).send('Bad Request')
+  }
+
+  db.patchModel(req.params.id, { description: req.body.description })
+  res.status(200).send('OK')
+})
+
 app.get('/api/models', (req, res) => {
   const models = db.getModels()
   res.json(models)
