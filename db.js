@@ -1,5 +1,6 @@
 const sqlite = require('better-sqlite3')
 const fs = require('fs')
+const nanoid = require('nanoid')
 
 class Database {
   constructor() {
@@ -139,6 +140,23 @@ class Database {
     const stmt = db.prepare('SELECT COUNT(*) AS count FROM users WHERE username = ? AND password = ?;')
     const count = stmt.pluck().get(username, password)
     return Boolean(count)
+  }
+
+  createAuthToken(userid) {
+    const db = this.dbInstance
+
+    const id = nanoid(48)
+    const token = {
+      userid: userid,
+      token: id,
+      created_at: Date.now(),
+      valid_until: Date.now() + 1000 * 60 * 60 * 24 * 10 // 10 days
+    }
+
+    const stmt = db.prepare(`INSERT INTO jwt(document) VALUES(?);`)
+    const info = stmt.run(JSON.stringify(token))
+    console.log('CREATE SESSION INFO', info)
+    return token
   }
 }
 
