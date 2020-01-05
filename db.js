@@ -158,6 +158,21 @@ class Database {
     console.log('CREATE SESSION INFO', info)
     return token
   }
+
+  validateAuthToken(userid, token) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare(`
+      SELECT COUNT(DISTINCT document) AS count 
+      FROM jwt, json_each(jwt.document) 
+      WHERE json_extract(document, '$.token') = ? 
+      AND json_extract(document, '$.userid') = ?
+      AND json_extract(document, '$.valid_until') >= ?;
+    `)
+    const count = stmt.pluck().get(token, userid, Date.now())
+
+    return count > 0
+  }
 }
 
 module.exports = Database
