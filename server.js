@@ -90,6 +90,7 @@ app.post('/api/model', (req, res) => {
   }
 
   const id = db.insertModel(obj)
+  io.emit('models', 'new')
   res.json({ id })
 })
 
