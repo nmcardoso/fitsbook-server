@@ -69,9 +69,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 })
 
-app.post('/test', (req, res) => {
-  fs.appendFileSync('.data/test.txt', JSON.stringify(req.body) + '\n------\n')
-  res.status(200).send('OK')
+app.post('/test', authorization, (req, res) => {
+  res.send('/test ROUTE')
 })
 
 app.post('/api/model', (req, res) => {
