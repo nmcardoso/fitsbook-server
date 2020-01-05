@@ -4,17 +4,34 @@ const fs = require('fs')
 class Database {
   constructor() {
     this.dbInstance = new sqlite('./.data/fitsbook.db', { verbose: x => console.info(`>> ${x}`) })
-    if (!fs.existsSync('./.data/fitsbook.lock')) {
-      this.setup()
-      fs.writeFileSync('./.data/fitsbook.lock', '')
+    this.DB_VERSION = 1
+
+    if (!fs.existsSync('./.data/fitsbook.version')) {
+      fs.writeFileSync('./.data/fitsbook.version', String(-1))
+    }
+
+    const storedVersion = parseInt(fs.readFileSync('./.data/fitsbook.version', 'utf8'))
+    if (storedVersion < this.DB_VERSION) {
+      if (this.setup(storedVersion, this.DB_VERSION)) {
+        fs.writeFileSync('./.data/fitsbook.version', String(this.DB_VERSION))
+  }
     }
   }
 
-  setup() {
+  setup(oldVersion, newVersion) {
     const db = this.dbInstance
 
-    let stmt = db.prepare('CREATE TABLE IF NOT EXISTS models(model TEXT);')
-    stmt.run()
+    for (let i = oldVersion + 1; i <= newVersion; i++) {
+      try {
+        if (fs.existsSync(`./db_migrations/${i}.sql`)) {
+          db.exec(fs.readFileSync(`./db_migrations/${i}.sql`, 'utf8'))
+        }
+        return true
+      } catch (e) {
+        console.error(e)
+        return false
+      }
+    }
   }
 
   insertModel(model) {
