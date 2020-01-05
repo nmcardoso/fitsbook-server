@@ -99,12 +99,12 @@ app.get('/api/model/:id', (req, res) => {
   res.json(model)
 })
 
-app.delete('/api/model/:id', (req, res) => {
+app.delete('/api/model/:id', authorization, (req, res) => {
   db.deleteModelById(req.params.id)
   res.send('OK')
 })
 
-app.post('/api/model/:id/description', (req, res) => {
+app.post('/api/model/:id/description', authorization, (req, res) => {
   if (!'description' in req.body) {
     return res.status(200).send('Bad Request')
   }
@@ -127,7 +127,7 @@ app.post('/api/training/:id/end', (req, res) => {
   res.status(200).send('OK')
 })
 
-app.post('/api/training/:id/stop', (req, res) => {
+app.post('/api/training/:id/stop', authorization, (req, res) => {
   const patch = {
     stop_signal: true,
     training_end: Date.now()
