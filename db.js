@@ -132,6 +132,14 @@ class Database {
     const count = stmt.pluck().get(username)
     return count > 0
   }
+
+  checkPassword(username, password) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare('SELECT COUNT(*) AS count FROM users WHERE username = ? AND password = ?;')
+    const count = stmt.pluck().get(username, password)
+    return Boolean(count)
+  }
 }
 
 module.exports = Database
