@@ -15,7 +15,7 @@ class Database {
     if (storedVersion < this.DB_VERSION) {
       if (this.setup(storedVersion, this.DB_VERSION)) {
         fs.writeFileSync('./.data/fitsbook.version', String(this.DB_VERSION))
-  }
+      }
     }
   }
 
@@ -176,11 +176,3 @@ class Database {
 }
 
 module.exports = Database
-
-// const db = new Database()
-// const models = db.getHistoryById(18)
-// console.log(models)
-// db.insertHistory(18, { epoch: 2, metrics: { acc: 4 } })
-// const models2 = db.getHistoryById(18)
-// console.log(models2)
-// console.log(db.getModelAttr(18, '$.stop_signal'))
