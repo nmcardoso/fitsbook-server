@@ -124,6 +124,14 @@ class Database {
     const user = stmt.get(username)
     return user
   }
+
+  userExists(username) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare('SELECT COUNT(*) AS count FROM users WHERE username = ?;')
+    const count = stmt.pluck().get(username)
+    return count > 0
+  }
 }
 
 module.exports = Database
