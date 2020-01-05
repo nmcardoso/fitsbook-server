@@ -54,6 +54,17 @@ app.post('/git', verifySignature, (req, res) => {
   }
 })
 
+const authorization = (req, res, next) => {
+  const uid = parseInt(req.headers['x-fitsbook-uid'])
+  const token = req.headers['x-fitsbook-token']
+
+  if (db.validateAuthToken(uid, token)) {
+    next()
+  } else {
+    res.status(401).send('Unauthorized')
+  }
+}
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 })
