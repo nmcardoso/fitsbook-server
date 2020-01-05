@@ -108,6 +108,14 @@ class Database {
     const info = stmt.run(JSON.stringify(patch), id)
     console.log('PATCH INFO', info)
   }
+
+  insertUser(name, username, password) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare('INSERT INTO users(name, username, password) VALUES(?, ?, ?);')
+    const info = stmt.run(name, username, password)
+    console.log('INSERT USER', info)
+  }
 }
 
 module.exports = Database
