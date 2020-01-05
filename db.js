@@ -116,6 +116,14 @@ class Database {
     const info = stmt.run(name, username, password)
     console.log('INSERT USER', info)
   }
+
+  getUser(username) {
+    const db = this.dbInstance
+
+    const stmt = db.prepare('SELECT oid AS id, * FROM users WHERE username = ?;')
+    const user = stmt.get(username)
+    return user
+  }
 }
 
 module.exports = Database
