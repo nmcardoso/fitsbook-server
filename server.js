@@ -151,6 +151,17 @@ app.get('/api/history/:id', (req, res) => {
   res.json(history)
 })
 
+app.post('/api/auth/token', (req, res) => {
+  const { username, password } = req.body
+  if (username && password && db.checkPassword(username, password)) {
+    const userid = db.getUser(username).id
+    const token = db.createAuthToken(userid)
+    res.json({ success: true, ...token })
+  } else {
+    res.json({ success: false, message: 'Auth failed' })
+  }
+})
+
 app.get('/api/ping', (req, res) => {
   return res.status(200).send(`PONG [${new Date().toUTCString()}]`)
 })
