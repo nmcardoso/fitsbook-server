@@ -162,6 +162,21 @@ app.post('/api/auth/token', (req, res) => {
   }
 })
 
+app.get('/api/csv/:id', (req, res) => {
+  res.setHeader('content-type', 'text/plain')
+
+  const history = db.getHistoryById(req.params.id)
+  if (!!history && Array.isArray(history) && history.length > 0) {
+    const head = Object.keys(history[0].metrics)
+    const lines = history.map(hist => {
+      return head.map(metric => hist.metrics[metric]).join(',')
+    })
+    res.send(`${head.join(',')}\n${lines.join('\n')}`)
+  } else {
+    res.send('')
+  }
+})
+
 app.get('/api/ping', (req, res) => {
   return res.status(200).send(`PONG [${new Date().toUTCString()}]`)
 })
