@@ -66,6 +66,19 @@ class Database {
     return models.map(model => JSON.parse(model))
   }
 
+  getModelsList() {
+    const db = this.dbInstance
+
+    let query = `SELECT json_extract(model, '$.model.name') AS name, 
+                        json_extract(model, '$.training_start') AS training_start, 
+                        json_extract(model, '$.training_end') AS training_end, 
+                        json_extract(model, '$.id') AS id 
+                 FROM models ORDER BY oid DESC;`
+    const stmt = db.prepare(query)
+    const models = stmt.all()
+    return models
+  }
+
   getModelAttr(id, path) {
     const db = this.dbInstance
 
