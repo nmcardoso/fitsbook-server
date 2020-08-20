@@ -117,6 +117,11 @@ app.get('/api/models', (req, res) => {
   res.json(models)
 })
 
+app.get('/api/models/list', (req, res) => {
+  const models = db.getModelsList()
+  res.json(models)
+})
+
 app.post('/api/training/:id/end', (req, res) => {
   const patch = {
     training_end: Date.now()
