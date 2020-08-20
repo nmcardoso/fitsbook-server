@@ -19,7 +19,7 @@ io.on('connection', socket => {
   })
 })
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '20mb' }))
 app.use(express.static('public'))
 app.use(cors())
 
