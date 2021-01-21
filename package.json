@@ -16,6 +16,6 @@
     "express": "^4.17.1",
     "nanoid": "^2.1.8",
     "node-cmd": "^3.0.0",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   }
 }
